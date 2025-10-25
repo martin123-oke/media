@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Bangun Datar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #38f9d7;
+            margin-bottom: 30px;
+        }
+        .shape-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .shape-btn {
+            padding: 20px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+        .shape-btn:hover {
+            transform: scale(1.05);
+        }
+        .shape-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .input-area {
+            background: #f0f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #38f9d7;
+            border-radius: 8px;
+        }
+        .visual {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .shape-display {
+            display: inline-block;
+            position: relative;
+        }
+        #square {
+            width: 150px;
+            height: 150px;
+            background: #43e97b;
+            border: 3px solid #333;
+        }
+        #rectangle {
+            width: 200px;
+            height: 120px;
+            background: #38f9d7;
+            border: 3px solid #333;
+        }
+        #circle {
+            width: 150px;
+            height: 150px;
+            background: #667eea;
+            border: 3px solid #333;
+            border-radius: 50%;
+        }
+        #triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 150px solid #764ba2;
+        }
+        .result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        .result h3 {
+            margin: 0 0 15px 0;
+        }
+        .result-item {
+            font-size: 1.3em;
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        .formula {
+            background: #fffbeb;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #fbbf24;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 Kalkulator Bangun Datar</h1>
+        
+        <div class="shape-selector">
+            <button class="shape-btn active" onclick="selectShape('persegi')">Persegi</button>
+            <button class="shape-btn" onclick="selectShape('persegi-panjang')">Persegi Panjang</button>
+            <button class="shape-btn" onclick="selectShape('lingkaran')">Lingkaran</button>
+            <button class="shape-btn" onclick="selectShape('segitiga')">Segitiga</button>
+        </div>
+        
+        <div id="input-persegi" class="input-area">
+            <h3>Persegi</h3>
+            <div class="input-group">
+                <label>Sisi (cm):</label>
+                <input type="number" id="sisi" placeholder="Masukkan panjang sisi" oninput="calculate()">
+            </div>
+            <div class="formula">
+                <strong>Rumus:</strong><br>
+                Luas = sisi × sisi<br>
+                Keliling = 4 × sisi
+            </div>
+        </div>
+        
+        <div id="input-persegi-panjang" class="input-area hidden">
+            <h3>Persegi Panjang</h3>
+            <div class="input-group">
+                <label>Panjang (cm):</label>
+                <input type="number" id="panjang" placeholder="Masukkan panjang" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Lebar (cm):</label>
+                <input type="number" id="lebar" placeholder="Masukkan lebar" oninput="calculate()">
+            </div>
+            <div class="formula">
+                <strong>Rumus:</strong><br>
+                Luas = panjang × lebar<br>
+                Keliling = 2 × (panjang + lebar)
+            </div>
+        </div>
+        
+        <div id="input-lingkaran" class="input-area hidden">
+            <h3>Lingkaran</h3>
+            <div class="input-group">
+                <label>Jari-jari (cm):</label>
+                <input type="number" id="jari" placeholder="Masukkan jari-jari" oninput="calculate()">
+            </div>
+            <div class="formula">
+                <strong>Rumus:</strong><br>
+                Luas = π × r²<br>
+                Keliling = 2 × π × r<br>
+                (π ≈ 3.14)
+            </div>
+        </div>
+        
+        <div id="input-segitiga" class="input-area hidden">
+            <h3>Segitiga</h3>
+            <div class="input-group">
+                <label>Alas (cm):</label>
+                <input type="number" id="alas" placeholder="Masukkan alas" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Tinggi (cm):</label>
+                <input type="number" id="tinggi" placeholder="Masukkan tinggi" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Sisi A (cm):</label>
+                <input type="number" id="sisiA" placeholder="Sisi pertama" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label>Sisi B (cm):</label>
+                <input type="number" id="sisiB" placeholder="Sisi kedua" oninput="calculate()">
+            </div>
+            <div class="formula">
+                <strong>Rumus:</strong><br>
+                Luas = ½ × alas × tinggi<br>
+                Keliling = sisi A + sisi B + alas
+            </div>
+        </div>
+        
+        <div class="visual">
+            <div id="visual-persegi" class="shape-display">
+                <div id="square"></div>
+            </div>
+            <div id="visual-persegi-panjang" class="shape-display hidden">
+                <div id="rectangle"></div>
+            </div>
+            <div id="visual-lingkaran" class="shape-display hidden">
+                <div id="circle"></div>
+            </div>
+            <div id="visual-segitiga" class="shape-display hidden">
+                <div id="triangle"></div>
+            </div>
+        </div>
+        
+        <div class="result" id="result">
+            <h3>📊 Hasil Perhitungan:</h3>
+            <div class="result-item" id="luas">Luas: -</div>
+            <div class="result-item" id="keliling">Keliling: -</div>
+        </div>
+    </div>
+
+    <script>
+        let currentShape = 'persegi';
+        
+        function selectShape(shape) {
+            currentShape = shape;
+            
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.input-area').forEach(area => {
+                area.classList.add('hidden');
+            });
+            document.getElementById('input-' + shape).classList.remove('hidden');
+            
+            document.querySelectorAll('.shape-display').forEach(visual => {
+                visual.classList.add('hidden');
+            });
+            document.getElementById('visual-' + shape).classList.remove('hidden');
+            
+            calculate();
+        }
+        
+        function calculate() {
+            let luas = 0;
+            let keliling = 0;
+            
+            switch(currentShape) {
+                case 'persegi':
+                    const sisi = parseFloat(document.getElementById('sisi').value);
+                    if (sisi > 0) {
+                        luas = sisi * sisi;
+                        keliling = 4 * sisi;
+                    }
+                    break;
+                    
+                case 'persegi-panjang':
+                    const panjang = parseFloat(document.getElementById('panjang').value);
+                    const lebar = parseFloat(document.getElementById('lebar').value);
+                    if (panjang > 0 && lebar > 0) {
+                        luas = panjang * lebar;
+                        keliling = 2 * (panjang + lebar);
+                    }
+                    break;
+                    
+                case 'lingkaran':
+                    const jari = parseFloat(document.getElementById('jari').value);
+                    if (jari > 0) {
+                        luas = Math.PI * jari * jari;
+                        keliling = 2 * Math.PI * jari;
+                    }
+                    break;
+                    
+                case 'segitiga':
+                    const alas = parseFloat(document.getElementById('alas').value);
+                    const tinggi = parseFloat(document.getElementById('tinggi').value);
+                    const sisiA = parseFloat(document.getElementById('sisiA').value);
+                    const sisiB = parseFloat(document.getElementById('sisiB').value);
+                    if (alas > 0 && tinggi > 0) {
+                        luas = 0.5 * alas * tinggi;
+                    }
+                    if (alas > 0 && sisiA > 0 && sisiB > 0) {
+                        keliling = alas + sisiA + sisiB;
+                    }
+                    break;
+            }
+            
+            document.getElementById('luas').textContent = 
+                luas > 0 ? `Luas: ${luas.toFixed(2)} cm²` : 'Luas: -';
+            document.getElementById('keliling').textContent = 
+                keliling > 0 ? `Keliling: ${keliling.toFixed(2)} cm` : 'Keliling: -';
+        }
+    </script>
+</body>
+</html>

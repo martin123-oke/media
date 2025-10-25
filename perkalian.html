@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabel Perkalian</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #f5576c;
+            margin-bottom: 20px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls label {
+            font-size: 1.2em;
+            margin-right: 10px;
+            color: #333;
+        }
+        .controls input {
+            font-size: 1.2em;
+            padding: 10px;
+            width: 100px;
+            border: 2px solid #f5576c;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #ddd;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        th {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-weight: bold;
+        }
+        td {
+            background: white;
+            cursor: pointer;
+        }
+        td:hover {
+            background: #ffe0e6;
+            transform: scale(1.1);
+            font-weight: bold;
+            color: #f5576c;
+        }
+        .highlight {
+            background: #ffd700 !important;
+            font-weight: bold;
+            animation: pulse 0.5s;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            font-size: 1.1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✖️ Tabel Perkalian Interaktif</h1>
+        
+        <div class="controls">
+            <label>Ukuran Tabel:</label>
+            <input type="number" id="size" value="10" min="5" max="20" oninput="generateTable()">
+        </div>
+        
+        <div class="table-container">
+            <table id="multiplicationTable"></table>
+        </div>
+        
+        <div class="info" id="info">
+            Klik sel untuk melihat perhitungan! 🎯
+        </div>
+    </div>
+
+    <script>
+        function generateTable() {
+            const size = parseInt(document.getElementById('size').value) || 10;
+            const table = document.getElementById('multiplicationTable');
+            table.innerHTML = '';
+            
+            const headerRow = table.insertRow();
+            headerRow.insertCell().innerHTML = '×';
+            
+            for (let i = 1; i <= size; i++) {
+                const th = document.createElement('th');
+                th.textContent = i;
+                headerRow.appendChild(th);
+            }
+            
+            for (let i = 1; i <= size; i++) {
+                const row = table.insertRow();
+                const th = document.createElement('th');
+                th.textContent = i;
+                row.appendChild(th);
+                
+                for (let j = 1; j <= size; j++) {
+                    const cell = row.insertCell();
+                    const result = i * j;
+                    cell.textContent = result;
+                    cell.onclick = function() {
+                        showCalculation(i, j, result);
+                        highlightCell(this);
+                    };
+                }
+            }
+        }
+        
+        function showCalculation(num1, num2, result) {
+            const info = document.getElementById('info');
+            info.innerHTML = `<strong>${num1} × ${num2} = ${result}</strong><br>`;
+            info.innerHTML += `${num1} dijumlahkan sebanyak ${num2} kali: `;
+            
+            let calculation = [];
+            for (let i = 0; i < num2; i++) {
+                calculation.push(num1);
+            }
+            info.innerHTML += calculation.join(' + ') + ` = ${result}`;
+        }
+        
+        function highlightCell(cell) {
+            const allCells = document.querySelectorAll('td');
+            allCells.forEach(c => c.classList.remove('highlight'));
+            cell.classList.add('highlight');
+        }
+        
+        generateTable();
+    </script>
+</body>
+</html>
